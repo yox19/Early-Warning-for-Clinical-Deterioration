@@ -1,4 +1,4 @@
-# 🚨 Early Warning for Clinical Deterioration
+# 🚨 Prototype Early Warning System combining NEWS2/qSOFA rule-based scoring with a machine-learning deterioration-risk model
 
 Machine learning to screen patients at early risk of deterioration after admission to the hospital ward, and guide timely intervention. It uses retrospective clinical data such as main diagnosis (Pneumonia), comorbidities(Heart Faiulre,HIV, Anemia combined with NEWS2 and QSOFA score to support evidence-based approach. 
 
