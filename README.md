@@ -43,13 +43,13 @@ The machine learning model achieved an AUC of 0.920, indicating strong overall p
 ### Subgroup Analysis: Performance varied across different patient subgroups:
 
 - Pneumonia Only (no HF): AUC of 0.939
-- 
+  
 - Pneumonia + Heart Failure: AUC of 0.881
-- 
+  
 - Pneumonia + HF + Anemia: AUC of 0.809
-- 
+  
 - HIV Positive: AUC of 0.894
-- 
+  
 - Age > 60: AUC of 0.911
   
 ### Model Comparison (ML Model vs. NEWS2 Alone):
