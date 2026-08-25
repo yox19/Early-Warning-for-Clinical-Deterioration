@@ -29,16 +29,54 @@ Comparison of performance across models.
 
 ## 📈 Key Results
 
+### Exploratory Data anlysis
+
+- Demographics:
+  
+- Age group:
+  
+- Comorbidities:
+  
+### Overall Model AUC: 
+The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
+
+### Subgroup Analysis: Performance varied across different patient subgroups:
+
+- Pneumonia Only (no HF): AUC of 0.939
+- 
+- Pneumonia + Heart Failure: AUC of 0.881
+- 
+- Pneumonia + HF + Anemia: AUC of 0.809
+- 
+- HIV Positive: AUC of 0.894
+- 
+- Age > 60: AUC of 0.911
+  
+### Model Comparison (ML Model vs. NEWS2 Alone):
+
+- NEWS2 Alone AUC: 0.898
+  
+- ML Model AUC: 0.920
+  
+The ML model showed an improvement of 0.021 AUC (+2.4%) over NEWS2 alone.
+
+### Time to Deterioration by Subgroup: 
+The mean time to deterioration across subgroups ranged from 30 to 32 hours from admission.
+
 ## 🧩 Clinical Relevance
 
 ## 🚀 How to Run
 
 Requirements
+
 Python 3.x
+
 pandas, numpy, matplotlib, seaborn
+
 scikit-learn
 
 ## Author
+
 Yonatan Yotora, MD
 
 Adare General Hospital ,Hawassa, Ethiopia
