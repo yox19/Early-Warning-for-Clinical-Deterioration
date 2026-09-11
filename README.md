@@ -1,6 +1,6 @@
-# 🚨 Prototype Early Warning System combining NEWS2/qSOFA rule-based scoring with a machine-learning deterioration-risk model
+#  🚨 Prototype Early Warning System combining NEWS2/qSOFA rule-based scoring with a machine-learning deterioration-risk model
 
-Machine learning to screen patients at early risk of deterioration after admission to the hospital ward, and guide timely intervention. It uses retrospective clinical data such as main diagnosis (Pneumonia), comorbidities(Heart Faiulre,HIV, Anemia combined with NEWS2 and QSOFA score to support evidence-based approach. 
+In this ML project, I explored whether routinely collected clinical variables could be transformed into an interpretable deterioration-risk tool suitable for resource-constrained clinical environments. It uses retrospective clinical data such as diagnosis, demographics, comorbidities, vital sign combined with NEWS2 and QSOFA score to support evidence-based approach. 
 
 ## 📌 Objectives
 
@@ -62,6 +62,8 @@ The ML model showed an improvement of 0.021 AUC (+2.4%) over NEWS2 alone.
 
 ### Time to Deterioration by Subgroup: 
 The mean time to deterioration across subgroups ranged from 30 to 32 hours from admission.
+
+## Limitation
 
 ## 🧩 Clinical Relevance
 
