@@ -13,7 +13,8 @@ In this ML project, I explored whether routinely collected clinical variables co
 
 - Propose scaling up strategies to multicentered study application 
 ## 📊 Dataset
-Data source: deidentified hospital medical ward patient EMT registery
+Data source: Deidentified hospital medical ward patient EMT registery
+
 Entry criteria: 
 
 - All adult > 18 yrs, admitted from July 1, 2025 to July 31, 2026
