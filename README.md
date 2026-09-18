@@ -33,17 +33,17 @@ Feature encoding for categorical variables.
 
 Missing values , Sex distribution, Age distribution
 ### 3. Modeling
-News2 and QSOFA scoring engine implementation
+#### News2 and QSOFA scoring engine implementation
 
-Defined subgroups (Anemia, HF, Pnemonia, HIV)
+#### Defined subgroups (Anemia, HF, Pnemonia, HIV)
 
-Feature engineering
+#### Feature engineering
 
 - X: features (vital sign, diagnosis, comorbidity, age)
 
 - Y: Detriorated in 48 hours
 
- Model performance 
+ #### Model performance 
 
 - AUC subgroup comparison
 
@@ -82,9 +82,8 @@ Age distribution:
 - 30-50: 68
   
 - 51-70: 137
-  
+
 - >70: 294
-  
 ### Overall Model AUC: 
 The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
 
