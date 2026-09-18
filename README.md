@@ -3,28 +3,65 @@
 In this ML project, I explored whether routinely collected clinical variables could be transformed into an interpretable deterioration-risk tool suitable for resource-constrained clinical environments. It uses retrospective clinical data such as diagnosis, demographics, comorbidities, vital sign combined with NEWS2 and QSOFA score to support evidence-based approach. 
 
 ## 📌 Objectives
+- Identify high risk groups for clinical derioration
 
+- validate applicabilty for timely intervention and early consultation
+
+- Assess feasibility for daily implementation into routine clinical workflow
+
+- Develop simple desktop based app for offline deployment in resource constrained setting 
+
+- Propose scaling up strategies to multicentered study application 
 ## 📊 Dataset
+Data source: deidentified hospital medical ward patient EMT registery
+Entry criteria: 
 
+- All adult > 18 yrs, admitted from July 1, 2025 to July 31, 2026
+
+- Vital sign record at least 80% availability
+
+Exclusion Criteria: Missing reports >20%, Direct ICU transfer from ER, Referred from other facility
+
+Variables: Main diagnosis ( Penmonia), Comborbidities (Heart failure, Asthma&COPD, Hypertension, Kidney disease, Previous Stroke)
 ## 🔬 Methods
 
 ### 1. Data Preprocessing
 
-Handling missing values and normalization.
+Handling missing values and normalization, imputed when <20%.
 Feature encoding for categorical variables.
 ### 2. Exploratory Data Analysis (EDA)
 
 Missing values , Sex distribution, Age distribution
 ### 3. Modeling
+News2 and QSOFA scoring engine implementation
 
-Logistic Regression
+Defined subgroups (Anemia, HF, Pnemonia, HIV)
 
-ROC-AUC
-### 4. Model Refinement
+Feature engineering
 
-Train/test split to avoid overfitting.
-Hyperparameter tuning.
-Comparison of performance across models.
+- X: features (vital sign, diagnosis, comorbidity, age)
+
+- Y: Detriorated in 48 hours
+
+ Model performance 
+
+- AUC subgroup comparison
+
+- Model comparison: News2 alone Vs ML
+
+- Time to deterioration by subgroup
+  
+### 4. Model Training
+
+- Null values imputed
+
+- Train/test split to avoid overfitting. Hyperparameter tuning.
+
+- Model 1: Logistic regression
+
+- Model 2: Gradiant Boost
+
+Flask web app development to test model performance on prospective dataset 
 
 ## 📈 Key Results
 
@@ -75,9 +112,23 @@ The ML model showed an improvement of 0.021 AUC (+2.4%) over NEWS2 alone.
 The mean time to deterioration across subgroups ranged from 30 to 32 hours from admission.
 
 ## Limitation
+- Small sample size
 
+- missing data
+
+- generalizability needs further population groups studies
 ## 🧩 Clinical Relevance
+- Adreess daily challange and gap in patient risk stratefication
 
+- Generate evidence to support ealry intervention patient at high risk to optimize care and improve clnical outcome
+
+## Future Direction
+
+- Asses with increased sample size
+
+- Multicentered implemnetation to assess replicabality of the model
+
+- Implement in emergency stup with refined parameters for robust clinical support
 ## 🚀 How to Run
 
 Requirements
