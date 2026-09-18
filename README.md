@@ -14,13 +14,12 @@ Handling missing values and normalization.
 Feature encoding for categorical variables.
 ### 2. Exploratory Data Analysis (EDA)
 
-Distribution of risk factors.
-Correlation analysis between clinical variables and stroke.
+Missing values , Sex distribution, Age distribution
 ### 3. Modeling
 
 Logistic Regression
-Random Forest Classifier
-Evaluation with Accuracy, Precision, Recall, F1-score, ROC-AUC.
+
+ROC-AUC
 ### 4. Model Refinement
 
 Train/test split to avoid overfitting.
@@ -31,11 +30,23 @@ Comparison of performance across models.
 
 ### Exploratory Data anlysis
 
-- Demographics:
+Missing values: ranged from 20-10, and admission HR and 24 HR recording highest 20 missing values, followed by 24 RR at 18 and admission temp at 13.
   
-- Age group:
+Sex distribution: 
+
+- Male: 274
+
+- Female: 226
+
+Age distribution:
+
+- <30: 1
   
-- Comorbidities:
+- 30-50: 68
+  
+- 51-70: 137
+  
+- >70: 294
   
 ### Overall Model AUC: 
 The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
