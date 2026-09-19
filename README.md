@@ -84,7 +84,7 @@ Age distribution:
   
 - 51-70: 137
 
-- >70: 294
+- >71: 294
 ### Overall Model AUC: 
 The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
 
