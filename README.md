@@ -125,7 +125,7 @@ The mean time to deterioration across subgroups ranged from 30 to 32 hours from 
 
 ## Future Direction
 
-- Asses with increased sample size, increased features (LAB Values such as: creatinine, serum electrolyte when available, ECHO,clinicians notes for treatment recommendations and guidance)
+- Asses with increased sample size, increased features (IV fluids, Drugs including iontrops)LAB Values such as: creatinine, serum electrolyte when available, ECHO,clinicians notes for treatment recommendations and guidance)
 
 - Multicentered implemnetation to assess replicabality of the model
 
