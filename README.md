@@ -32,7 +32,7 @@ Handling missing values and normalization, imputed when <20%.
 Feature encoding for categorical variables.
 ### 2. Exploratory Data Analysis (EDA)
 
-Missing values , Sex distribution, Age distribution
+Missing values , Sex distribution, Age distribution, Shock Index 
 ### 3. Modeling
 #### News2 and QSOFA scoring engine implementation
 
@@ -46,7 +46,7 @@ Missing values , Sex distribution, Age distribution
 
  #### Model performance 
 
-- AUC subgroup comparison
+- Deterioration rate subgroup comparison
 
 - Model comparison: News2 alone Vs ML
 
@@ -61,6 +61,8 @@ Missing values , Sex distribution, Age distribution
 - Model 1: Logistic regression
 
 - Model 2: Gradiant Boost
+
+- Shap plot cross model 
 
 Flask web app development to test model performance on prospective dataset 
 
@@ -82,9 +84,7 @@ Age distribution:
   
 - 30-50: 68
   
-- 51-70: 137
-
-- >71: 294
+- 51-70: 137 and >71: 294
 
 ### Subgroup Analysis: Performance varied across different patient subgroups:
 
@@ -125,7 +125,7 @@ The mean time to deterioration across subgroups ranged from 30 to 32 hours from 
 
 ## Future Direction
 
-- Asses with increased sample size
+- Asses with increased sample size, increased features (LAB Values such as: creatinine, serum electrolyte when available, ECHO)
 
 - Multicentered implemnetation to assess replicabality of the model
 
