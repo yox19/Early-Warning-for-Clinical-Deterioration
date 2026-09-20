@@ -32,7 +32,7 @@ Handling missing values and normalization, imputed when <20%.
 Feature encoding for categorical variables.
 ### 2. Exploratory Data Analysis (EDA)
 
-Missing values , Sex distribution, Age distribution, Shock Index 
+Missing values , Sex distribution, Age distribution, Shock Index , Improved, Death, DAMA
 ### 3. Modeling
 #### News2 and QSOFA scoring engine implementation
 
