@@ -13,11 +13,11 @@ In this ML project, I explored whether routinely collected clinical variables co
 
 - Propose scaling up strategies to multicentered study application 
 ## 📊 Dataset
-Data source: Deidentified hospital medical ward patient EMT registery
+Data source: Deidentified patient EMR registery hospital medical ward 
 
 Entry criteria: 
 
-- All adult > 18 yrs, admitted from July 1, 2025 to July 31, 2026
+- All adult > 18 yrs, admitted to medical ward from July 1, 2025 to July 31, 2026
 
 - Vital sign record at least 80% availability
 
@@ -68,7 +68,7 @@ Flask web app development to test model performance on prospective dataset
 
 ### Exploratory Data anlysis
 
-Missing values: ranged from 20-10, and admission HR and 24 HR recording highest 20 missing values, followed by 24 RR at 18 and admission temp at 13.
+Missing values: ranged from 10-20, and admission HR and 24 HR recording highest 20 missing values, followed by 24 RR at 18 and admission temp at 13.
   
 Sex distribution: 
 
@@ -85,8 +85,6 @@ Age distribution:
 - 51-70: 137
 
 - >71: 294
-### Overall Model AUC: 
-The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
 
 ### Subgroup Analysis: Performance varied across different patient subgroups:
 
@@ -108,6 +106,9 @@ The machine learning model achieved an AUC of 0.920, indicating strong overall p
   
 The ML model showed an improvement of 0.021 AUC (+2.4%) over NEWS2 alone.
 
+### Overall Model AUC: 
+The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
+
 ### Time to Deterioration by Subgroup: 
 The mean time to deterioration across subgroups ranged from 30 to 32 hours from admission.
 
@@ -120,7 +121,7 @@ The mean time to deterioration across subgroups ranged from 30 to 32 hours from 
 ## 🧩 Clinical Relevance
 - Adreess daily challange and gap in patient risk stratefication
 
-- Generate evidence to support ealry intervention patient at high risk to optimize care and improve clnical outcome
+- Generate evidence to support early intervention in patients at high risk to optimize care and improve clnical outcome
 
 ## Future Direction
 
@@ -128,7 +129,7 @@ The mean time to deterioration across subgroups ranged from 30 to 32 hours from 
 
 - Multicentered implemnetation to assess replicabality of the model
 
-- Implement in emergency stup with refined parameters for robust clinical support
+- Implement in emergency setup with refined parameters and close time observation where clinical significance will more value 
 ## 🚀 How to Run
 
 Requirements
