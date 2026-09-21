@@ -3,9 +3,9 @@
 In this ML project, I explored whether routinely collected clinical variables could be transformed into an interpretable deterioration-risk tool suitable for resource-constrained clinical environments. It uses retrospective clinical data such as diagnosis, demographics, comorbidities, vital sign combined with NEWS2 and QSOFA score to support evidence-based approach. 
 
 ## 📌 Objectives
-- Identify high risk groups for clinical derioration
+- Identify patients groups at high risk of clinical deterioration
 
-- validate applicabilty for timely intervention and early consultation
+- Develop early warning score system for timely intervention and early consultation
 
 - Assess feasibility for daily implementation into routine clinical workflow
 
@@ -70,7 +70,7 @@ Flask web app development to test model performance on prospective dataset
 
 ### Exploratory Data anlysis
 
-Missing values: ranged from 10-20, and admission HR and 24 HR recording highest 20 missing values, followed by 24 RR at 18 and admission temp at 13.
+Missing values: ranged from 10-20, and admission heart rate and 24 heart rate recording highest 20 missing values, followed by 24 respiratory rate at 18 and admission temperature at 13.
   
 Sex distribution: 
 
@@ -117,19 +117,19 @@ The mean time to deterioration across subgroups ranged from 30 to 32 hours from 
 
 - missing data
 
-- generalizability needs further population groups studies
+- generalizability needs further population group studies
 ## 🧩 Clinical Relevance
-- Adreess daily challange and gap in patient risk stratefication
+- Address daily challange and gap in patient risk stratefication
 
 - Generate evidence to support early intervention in patients at high risk to optimize care and improve clnical outcome
 
 ## Future Direction
 
-- Asses with increased sample size, increased features (IV fluids, Drugs including iontrops)LAB Values such as: creatinine, serum electrolyte when available, ECHO,clinicians notes for treatment recommendations and guidance)
+- Asses with increased sample size, increased features (IV fluids, Drugs including iontrops, LAB Values such as: creatinine, serum electrolyte when available, ECHO,clinicians notes for treatment recommendations and guidance)
 
 - Multicentered implemnetation to assess replicabality of the model
 
-- Implement in emergency setup with refined parameters and close time observation where clinical significance will more value 
+- Implement in emergency setup with refined parameters and close time observation where clinical significance have more robust outcome 
 ## 🚀 How to Run
 
 Requirements
@@ -139,6 +139,8 @@ Python 3.x
 pandas, numpy, matplotlib, seaborn
 
 scikit-learn
+
+Data source: available upon request 
 
 ## Author
 
