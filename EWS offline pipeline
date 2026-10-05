@@ -1,0 +1,47 @@
+clinical_ews_app/
+├── README.md                  # Project overview and setup guide
+├── models/
+│   └── gb_model.pkl           # Saved trained model artifact
+├── src/
+│   ├── __init__.py
+│   ├── data_pipeline.py       # Step 1: Data cleaning & preprocessing
+│   ├── feature_engineering.py # Step 2: Feature creation (Shock index, qSOFA, NEWS2)
+│   └── model_inference.py     # Step 3: Model prediction logic
+├── app.py                     # Step 4: Standalone GUI Desktop Application
+└── requirements.txt           # Dependencies
+
+## Step 1: Data Cleaning & Validation
+
+Filters physiologically impossible vital signs and maps categorical mental status inputs to numerical equivalents
+
+import pandas as pd
+import numpy as np
+
+# Valid physiological ranges for inpatient admission vitals
+VITAL_BOUNDS = {
+    'HR': (20, 250),
+    'RR': (4, 60),
+    'SBP': (40, 280),
+    'Temp': (30.0, 43.0),
+    'SpO2': (50, 100)
+}
+
+AVPU_MAPPING = {'A': 15, 'V': 13, 'P': 10, 'U': 8}
+
+def clean_patient_vitals(df: pd.DataFrame) -> pd.DataFrame:
+    """Filters impossible vital signs and standardizes consciousness scores."""
+    df = df.copy()
+    
+    for vital, (low, high) in VITAL_BOUNDS.items():
+        col = f'Adm_{vital}'
+        if col in df.columns:
+            df[col] = df[col].apply(lambda x: x if low <= x <= high else np.nan)
+            
+    if 'Adm_AVPU' in df.columns:
+        df['gcs_equivalent'] = df['Adm_AVPU'].map(AVPU_MAPPING)
+        
+    return df
+
+df = pd.read_csv('file_path')
+df = clean_patient_vitals(df) # Apply the cleaning function
+print(df.head())
