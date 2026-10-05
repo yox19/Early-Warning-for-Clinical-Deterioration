@@ -12,7 +12,7 @@ clinical_ews_app/
 
 ## Step 1: Data Cleaning & Validation
 
-Filters physiologically impossible vital signs and maps categorical mental status inputs to numerical equivalents
+## Filters physiologically impossible vital signs and maps categorical mental status inputs to numerical equivalents
 
 import pandas as pd
 import numpy as np
@@ -45,3 +45,295 @@ def clean_patient_vitals(df: pd.DataFrame) -> pd.DataFrame:
 df = pd.read_csv('file_path')
 df = clean_patient_vitals(df) # Apply the cleaning function
 print(df.head())
+
+## Step 2: Feature Engineering & Scoring Rules
+
+## Calculates standard clinical baseline scores (NEWS2, qSOFA, Shock Index) and formats input features for machine learning prediction.
+
+import pandas as pd
+
+def compute_qsofa(rr: float, sbp: float, avpu: str) -> int:
+    """Calculates Quick Sequential Organ Failure Assessment (qSOFA) score."""
+    return (1 if rr >= 22 else 0) + (1 if sbp <= 100 else 0) + (1 if avpu != 'A' else 0)
+
+def compute_news2(rr: float, spo2: float, o2_status: str, sbp: float, 
+                  hr: float, temp: float, avpu: str) -> int:
+    """Calculates National Early Warning Score 2 (NEWS2)."""
+    score = 0
+    
+    # Respiratory Rate
+    if rr <= 8 or rr >= 25: score += 3
+    elif 21 <= rr <= 24: score += 2
+    elif 9 <= rr <= 11: score += 1
+
+    # Oxygen Saturation & Supplemental O2
+    if o2_status.lower() == 'yes':
+        if spo2 <= 83 or spo2 >= 97: score += 3
+        elif spo2 >= 95: score += 2
+        elif spo2 >= 93: score += 1
+    else:
+        if spo2 <= 91: score += 3
+        elif spo2 <= 92: score += 2
+        elif spo2 <= 93: score += 1
+
+    # Systolic BP
+    if sbp <= 90 or sbp >= 220: score += 3
+    elif 91 <= sbp <= 100: score += 2
+    elif 101 <= sbp <= 110: score += 1
+
+    # Heart Rate
+    if hr <= 40 or hr >= 131: score += 3
+    elif 111 <= hr <= 130: score += 2
+    elif 41 <= hr <= 50 or 91 <= hr <= 110: score += 1
+
+    # Temperature
+    if temp <= 35.0: score += 3
+    elif temp >= 39.1: score += 2
+    elif temp <= 36.0 or 38.1 <= temp <= 39.0: score += 1
+
+    # Consciousness (AVPU)
+    if avpu != 'A': score += 3
+
+    return score
+
+def build_model_features(hr: float, rr: float, sbp: float, temp: float, 
+                         spo2: float, avpu: str, age: int, 
+                         has_hf: int, anemia: int, hiv: int) -> pd.DataFrame:
+    """Assembles patient input dictionary into a single DataFrame row for ML inference."""
+    features = {
+        'adm_heart_rate': hr,
+        'adm_respiratory_rate': rr,
+        'adm_systolic_bp': sbp,
+        'adm_spo2': spo2,
+        'adm_temperature': temp,
+        'adm_shock_index': hr / (sbp if sbp > 0 else 100),
+        'adm_qsofa_total': compute_qsofa(rr, sbp, avpu),
+        'adm_news2_score': compute_news2(rr, spo2, 'no', sbp, hr, temp, avpu),
+        'has_hf': has_hf,
+        'anemia': anemia,
+        'hiv': hiv,
+        'age': age
+    }
+    return pd.DataFrame([features]).fillna(0)
+
+## Step 3: Clinical Risk Evaluator & Recommendations
+
+## Combines rule-based clinical guidelines with trained Gradient Boosting model probabilities to generate clear risk alerts and clinical action plans.
+
+import pickle
+import os
+
+class RiskEvaluator:
+    def __init__(self, model_path: str = 'models/gb_model.pkl'):
+        self.model = None
+        if os.path.exists(model_path):
+            with open(model_path, 'rb') as f:
+                self.model = pickle.load(f)
+
+    def evaluate_patient(self, features_df, news2_score: int, qsofa_score: int):
+        # Determine ML Risk Probability
+        ml_prob = None
+        if self.model is not None:
+            try:
+                ml_prob = self.model.predict_proba(features_df)[0][1] * 100
+            except Exception:
+                ml_prob = None
+
+        # Determine Overall Alert Level
+        if news2_score >= 7 or (ml_prob is not None and ml_prob >= 50):
+            tier = "HIGH RISK"
+            color = "#d32f2f" # Red
+            recommendations = [
+                "Immediate emergency clinical response required.",
+                "Escalate care to senior physician / ICU registrar.",
+                "Continuous vital signs monitoring required.",
+                "Assess for sepsis protocols if qSOFA ≥ 2."
+            ]
+        elif news2_score >= 5 or (ml_prob is not None and ml_prob >= 25):
+            tier = "MEDIUM RISK"
+            color = "#f57c00" # Orange
+            recommendations = [
+                "Urgent ward-based clinical review required.",
+                "Increase vital signs monitoring frequency to every 1-2 hours.",
+                "Inform clinical care team leader."
+            ]
+        else:
+            tier = "LOW RISK"
+            color = "#388e3c" # Green
+            recommendations = [
+                "Continue standard ward observation protocol.",
+                "Re-assess vital signs every 4-6 hours."
+            ]
+
+        # Sepsis Specific Alert
+        sepsis_warning = qsofa_score >= 2
+
+        return {
+            'tier': tier,
+            'color': color,
+            'news2': news2_score,
+            'qsofa': qsofa_score,
+            'ml_prob': f"{ml_prob:.1f}%" if ml_prob is not None else "N/A",
+            'sepsis_warning': sepsis_warning,
+            'recommendations': recommendations
+        }
+
+## Step 4: Standalone Application Entry Point
+## Below is a complete, native GUI app built with CustomTkinter (modern Tkinter framework). It operates offline as an independent desktop software window.
+
+import customtkinter as ctk
+from src.feature_engineering import build_model_features, compute_news2, compute_qsofa
+from src.model_inference import RiskEvaluator
+
+ctk.set_appearance_mode("System")
+ctk.set_default_color_theme("blue")
+
+class EarlyWarningApp(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Clinical Early Warning System (EWS Desktop)")
+        self.geometry("900x650")
+        self.evaluator = RiskEvaluator()
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        self._build_input_panel()
+        self._build_output_panel()
+
+    def _build_input_panel(self):
+        input_frame = ctk.CTkScrollableFrame(self, label_text="Patient Data Entry")
+        input_frame.grid(row=0, column=0, padx=15, pady=15, sticky="nsew")
+
+        # Age
+        ctk.CTkLabel(input_frame, text="Age (years):").pack(anchor="w", pady=(5,0))
+        self.entry_age = ctk.CTkEntry(input_frame)
+        self.entry_age.insert(0, "65")
+        self.entry_age.pack(fill="x", pady=(0,5))
+
+        # Heart Rate
+        ctk.CTkLabel(input_frame, text="Heart Rate (bpm):").pack(anchor="w", pady=(5,0))
+        self.entry_hr = ctk.CTkEntry(input_frame)
+        self.entry_hr.insert(0, "75")
+        self.entry_hr.pack(fill="x", pady=(0,5))
+
+        # Respiratory Rate
+        ctk.CTkLabel(input_frame, text="Respiratory Rate (breaths/min):").pack(anchor="w", pady=(5,0))
+        self.entry_rr = ctk.CTkEntry(input_frame)
+        self.entry_rr.insert(0, "16")
+        self.entry_rr.pack(fill="x", pady=(0,5))
+
+        # Systolic BP
+        ctk.CTkLabel(input_frame, text="Systolic BP (mmHg):").pack(anchor="w", pady=(5,0))
+        self.entry_sbp = ctk.CTkEntry(input_frame)
+        self.entry_sbp.insert(0, "120")
+        self.entry_sbp.pack(fill="x", pady=(0,5))
+
+        # Temperature
+        ctk.CTkLabel(input_frame, text="Temperature (°C):").pack(anchor="w", pady=(5,0))
+        self.entry_temp = ctk.CTkEntry(input_frame)
+        self.entry_temp.insert(0, "36.8")
+        self.entry_temp.pack(fill="x", pady=(0,5))
+
+        # SpO2
+        ctk.CTkLabel(input_frame, text="SpO₂ (%):").pack(anchor="w", pady=(5,0))
+        self.entry_spo2 = ctk.CTkEntry(input_frame)
+        self.entry_spo2.insert(0, "98")
+        self.entry_spo2.pack(fill="x", pady=(0,5))
+
+        # AVPU / Consciousness
+        ctk.CTkLabel(input_frame, text="Consciousness (AVPU):").pack(anchor="w", pady=(5,0))
+        self.opt_avpu = ctk.CTkOptionMenu(input_frame, values=["Alert (A)", "Voice (V)", "Pain (P)", "Unresponsive (U)"])
+        self.opt_avpu.pack(fill="x", pady=(0,5))
+
+        # Comorbidities
+        ctk.CTkLabel(input_frame, text="Comorbidities:").pack(anchor="w", pady=(10,0))
+        self.var_hf = ctk.CTkCheckBox(input_frame, text="Heart Failure History")
+        self.var_hf.pack(anchor="w", pady=2)
+        self.var_anemia = ctk.CTkCheckBox(input_frame, text="Anemia")
+        self.var_anemia.pack(anchor="w", pady=2)
+        self.var_hiv = ctk.CTkCheckBox(input_frame, text="HIV Positive")
+        self.var_hiv.pack(anchor="w", pady=2)
+
+        # Run Assessment Button
+        btn_assess = ctk.CTkButton(input_frame, text="Assess Deterioration Risk", 
+                                   fg_color="#1f538d", hover_color="#14375e", 
+                                   command=self._assess_patient)
+        btn_assess.pack(fill="x", pady=20)
+
+    def _build_output_panel(self):
+        self.output_frame = ctk.CTkFrame(self)
+        self.output_frame.grid(row=0, column=1, padx=15, pady=15, sticky="nsew")
+
+        self.lbl_status = ctk.CTkLabel(self.output_frame, text="Patient Assessment Output", 
+                                       font=ctk.CTkFont(size=20, weight="bold"))
+        self.lbl_status.pack(pady=20)
+
+        self.txt_results = ctk.CTkTextbox(self.output_frame, font=ctk.CTkFont(size=14))
+        self.txt_results.pack(fill="both", expand=True, padx=15, pady=15)
+        self.txt_results.insert("1.0", "Fill out patient parameters on the left and click 'Assess Deterioration Risk'.")
+        self.txt_results.configure(state="disabled")
+
+    def _assess_patient(self):
+        try:
+            age = int(self.entry_age.get())
+            hr = float(self.entry_hr.get())
+            rr = float(self.entry_rr.get())
+            sbp = float(self.entry_sbp.get())
+            temp = float(self.entry_temp.get())
+            spo2 = float(self.entry_spo2.get())
+            avpu = self.opt_avpu.get()[0] # Take first letter 'A', 'V', 'P', 'U'
+
+            has_hf = 1 if self.var_hf.get() == 1 else 0
+            anemia = 1 if self.var_anemia.get() == 1 else 0
+            hiv = 1 if self.var_hiv.get() == 1 else 0
+
+            # Compute clinical metrics
+            news2 = compute_news2(rr, spo2, 'no', sbp, hr, temp, avpu)
+            qsofa = compute_qsofa(rr, sbp, avpu)
+            features_df = build_model_features(hr, rr, sbp, temp, spo2, avpu, age, has_hf, anemia, hiv)
+
+            # Evaluate risk
+            res = self.evaluator.evaluate_patient(features_df, news2, qsofa)
+
+            # Update display
+            self.txt_results.configure(state="normal")
+            self.txt_results.delete("1.0", "end")
+
+            summary = f"=== ASSESSMENT SUMMARY ===\n\n"
+            summary += f"Risk Status: {res['tier']}\n"
+            summary += f"NEWS2 Score: {res['news2']} / 20\n"
+            summary += f"qSOFA Score: {res['qsofa']} / 3\n"
+            summary += f"ML Deterioration Probability: {res['ml_prob']}\n\n"
+
+            if res['sepsis_warning']:
+                summary += "⚠️ WARNING: High risk for Sepsis (qSOFA ≥ 2).\n\n"
+
+            summary += "RECOMMENDED ACTIONS:\n"
+            for idx, rec in enumerate(res['recommendations'], 1):
+                summary += f"{idx}. {rec}\n"
+
+            self.txt_results.insert("1.0", summary)
+            self.txt_results.configure(state="disabled")
+            self.lbl_status.configure(text=f"STATUS: {res['tier']}", text_color=res['color'])
+
+        except ValueError:
+            self.txt_results.configure(state="normal")
+            self.txt_results.delete("1.0", "end")
+            self.txt_results.insert("1.0", "ERROR: Please enter valid numerical values for age, vitals, and laboratory parameters.")
+            self.txt_results.configure(state="disabled")
+
+if __name__ == "__main__":
+    app = EarlyWarningApp()
+    app.mainloop()
+
+## 4.Packaging into a Standalone Desktop Executable (.exe or Application)
+## To run this application as a single desktop app file on Windows or macOS without running python manually:
+# Install dependencies:
+pip install customtkinter pandas numpy scikit-learn pyinstaller
+# Build executable using PyInstaller:
+pyinstaller --noconfirm --onedir --windowed --add-data "models/gb_model.pkl:models" app.py
+
+-----compiled, standalone desktop app will be generated inside the dist/app/ folder.----
