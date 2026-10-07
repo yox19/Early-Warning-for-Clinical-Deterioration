@@ -23,7 +23,7 @@ Entry criteria:
 
 Exclusion Criteria: Missing reports >20%, Direct ICU transfer from ER, Referred from other facility
 
-Variables: Main diagnosis ( Penmonia), Comborbidities (Heart failure, Asthma&COPD, Hypertension, Kidney disease, Previous Stroke)
+Variables: Main diagnosis (Penmonia), Comborbidities (Heart failure, Asthma/COPD, , Acute Kidney disease, Anemia)
 ## 🔬 Methods
 
 ### 1. Data Preprocessing
@@ -32,12 +32,10 @@ Handling missing values and normalization, imputed when <20%.
 Feature encoding for categorical variables.
 ### 2. Exploratory Data Analysis (EDA)
 
-Missing values , Sex distribution, Age distribution, Shock Index , Improved, Death, DAMA
+Missing values , Sex distribution, Age distribution, Shock Index , Deteriorated
 ### 3. Modeling
 #### News2 and QSOFA scoring engine implementation
-
-#### Defined subgroups (Anemia, HF, Pnemonia, HIV)
-
+#### Define subgroups (Anemia, HF, HIV, Age)
 #### Feature engineering
 
 - X: features (vital sign, diagnosis, comorbidity, age)
@@ -74,43 +72,70 @@ Missing values: ranged from 10-20, and admission heart rate and 24 heart rate re
   
 Sex distribution: 
 
-- Male: 274
+- Male: 685
 
-- Female: 226
+- Female: 555
 
 Age distribution:
 
-- <30: 1
+- <30: 130
   
-- 30-50: 68
+- 30-50: 393
   
-- 51-70: 137 and >71: 294
+- 51-70: 384 and >71: 333
 
 ### Subgroup Analysis: Performance varied across different patient subgroups:
 
-- Pneumonia Only (no HF): AUC of 0.939
-  
-- Pneumonia + Heart Failure: AUC of 0.881
-  
-- Pneumonia + HF + Anemia: AUC of 0.809
-  
-- HIV Positive: AUC of 0.894
-  
-- Age > 60: AUC of 0.911
+Pneumonia Only (no HF):
+
+- Patients: 201, Deterioration Rate: 15.4%
+
+- AUC: 0.791
+
+Pneumonia + Heart Failure:
+
+- Patients: 171, Deterioration Rate: 35.7%
+
+- AUC: 0.815
+
+Pneumonia + HF + Anemia:
+
+- Patients: 92, Deterioration Rate: 39.1%
+
+- AUC: 0.802
+
+HIV Positive:
+
+- Patients: 19, Deterioration Rate: 10.5%
+
+- AUC: 0.971
+
+Age > 60:
+
+- Patients: 157, Deterioration Rate: 24.8%
+
+- AUC: 0.726
   
 ### Model Comparison (ML Model vs. NEWS2 Alone):
 
-- NEWS2 Alone AUC: 0.898
-  
-- ML Model AUC: 0.920
-  
-The ML model showed an improvement of 0.021 AUC (+2.4%) over NEWS2 alone.
+NEWS2 Alone AUC (Test Set): 0.845
+ML Model AUC (Test Set - GB): 0.820
+Improvement: -0.025 (+-3.0%) -- vs NEWS2
 
 ### Overall Model AUC: 
-The machine learning model achieved an AUC of 0.920, indicating strong overall performance in predicting deterioration.
+The machine learning model achieved an AUC of (Test Set) 0.820.
 
 ### Time to Deterioration by Subgroup: 
-The mean time to deterioration across subgroups ranged from 30 to 32 hours from admission.
+
+Pneumonia Only (no HF): Mean 31 hours from admission
+
+Pneumonia + Heart Failure: Mean 30 hours from admission
+
+Pneumonia + HF + Anemia: Mean 30 hours from admission
+
+HIV: Mean 
+
+Age > 60: Mean 31 hours from admission
 
 ## Limitation
 - Small sample size
